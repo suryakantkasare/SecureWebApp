@@ -76,6 +76,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile'])) {
     <title>Profile | Secure Web App</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .profile-title {
+            margin-bottom: 20px; /* Adds space below the title */
+        }
+        .profile-img-container {
+            text-align: center;
+        }
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 20px; /* Adds space between the title and the image */
+        }
+    </style>
 </head>
 <body class="bg-light">
 
@@ -86,19 +103,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile'])) {
             <div class="col-md-6">
                 <div class="card shadow">
                     <div class="card-header text-center bg-primary text-white">
-                        <h3>Profile</h3>
+                        <h3 class="profile-title mb-4">Profile</h3>
                     </div>
                     <div class="card-body">
-                        <?php if (!empty($success)) echo "<div class='alert alert-success'>$success</div>"; ?>
+                        <div class="profile-img-container">
+                            <?php if (!empty($user['profile_image'])): ?>
+                                <img src="../uploads/<?= htmlspecialchars($user['profile_image']) ?>" class="profile-image">
+                            <?php else: ?>
+                                <img src="../images/default-profile.png" class="profile-image">
+                            <?php endif; ?>
+                        </div>
+
+                        <?php if (!empty($success)) echo "<div class='alert alert-success mt-3'>$success</div>"; ?>
                         <?php if (!empty($errors)) {
-                            echo "<div class='alert alert-danger'><ul>";
+                            echo "<div class='alert alert-danger mt-3'><ul>";
                             foreach ($errors as $error) {
                                 echo "<li>$error</li>";
                             }
                             echo "</ul></div>";
                         } ?>
 
-                        <form action="profile.php" method="post" enctype="multipart/form-data">
+                        <form action="profile.php" method="post" enctype="multipart/form-data" class="mt-4">
                             <div class="mb-3">
                                 <label class="form-label">Username</label>
                                 <input type="text" class="form-control" value="<?= htmlspecialchars($user['username']) ?>" disabled>
@@ -120,12 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile'])) {
                             </div>
 
                             <div class="mb-3 text-center">
-                                <label class="form-label">Profile Image</label><br>
-                                <?php if (!empty($user['profile_image'])): ?>
-                                    <img src="../uploads/<?= htmlspecialchars($user['profile_image']) ?>" class="rounded-circle mb-3" width="150">
-                                <?php else: ?>
-                                    <img src="../images/default-profile.png" class="rounded-circle mb-3" width="150">
-                                <?php endif; ?>
+                                <label class="form-label">Update Profile Image</label><br>
                                 <input type="file" class="form-control mt-2" name="profile_image" accept="image/*">
                             </div>
 
