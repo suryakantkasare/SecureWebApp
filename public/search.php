@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search_query'])) {
                                          alt="Profile Picture">
                                     <h5 class="fw-bold"><?php echo htmlspecialchars($user['username']); ?></h5>
                                     <p class="text-muted"><?php echo htmlspecialchars($user['email']); ?></p>
-                                    <p><strong>Balance: </strong>Rs. <?php echo number_format($user['balance'], 2); ?></p>
+                            
                                     <a href="profile.php?id=<?php echo $user['id']; ?>" class="btn btn-outline-primary btn-sm">View Profile</a>
                                 </div>
                             </div>
