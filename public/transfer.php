@@ -6,6 +6,9 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
+require_once "../includes/log_activity.php";
+
+logActivity("transfer Page");
 
 $user_id = $_SESSION['user_id'];
 $errors = [];

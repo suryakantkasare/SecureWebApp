@@ -7,6 +7,10 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+require_once __DIR__ . "../includes/log_activity.php";
+
+logActivity("Transaction Page");
+
 $user_id = $_SESSION['user_id'];
 
 // Fetch user balance

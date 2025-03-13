@@ -6,6 +6,9 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
+require_once __DIR__ . "../includes/log_activity.php";
+
+logActivity("search Page");
 
 $searchResults = [];
 
