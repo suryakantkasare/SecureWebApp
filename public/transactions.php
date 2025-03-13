@@ -51,7 +51,7 @@ $transactions = $historyQuery->fetchAll(PDO::FETCH_ASSOC);
     <p class="text-center"><strong>Your Balance:</strong> Rs. <?php echo number_format($user['balance'], 2); ?></p>
 
     <table class="table table-striped text-center">
-        <thead class="table-dark">
+        <thead class="table-blue">
             <tr>
                 <th>#</th>
                 <th>Sender</th>
