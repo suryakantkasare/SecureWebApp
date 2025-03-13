@@ -45,7 +45,7 @@ logActivity("index Page");
                     <div class="d-grid gap-2 col-6 mx-auto mt-3">
                         <a href="public/profile.php" class="btn btn-primary">View Profile</a>
                         <a href="public/transfer.php" class="btn btn-success">Transfer Money</a>
-                        <a href="public/history.php" class="btn btn-warning">Transaction History</a>
+                        <a href="public/transactions.php" class="btn btn-warning">Transaction History</a>
                         <a href="public/logout.php" class="btn btn-danger">Logout</a>
                     </div>
                 </div>

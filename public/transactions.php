@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require_once __DIR__ . "../includes/log_activity.php";
+require_once "../includes/log_activity.php";
 
 logActivity("Transaction Page");
 
