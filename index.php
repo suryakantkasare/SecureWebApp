@@ -10,10 +10,12 @@ if ($loggedIn) {
     $query = $db->prepare("SELECT username, balance FROM users WHERE id = ?");
     $query->execute([$user_id]);
     $user = $query->fetch(PDO::FETCH_ASSOC);
-}
-require_once "includes/log_activity.php";
+    
+    require_once "includes/log_activity.php";
 
-logActivity("index Page");
+    logActivity("index Page");
+}
+
 
 ?>
 
