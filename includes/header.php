@@ -12,6 +12,7 @@
                     <li class="nav-item"><a class="nav-link" href="public/profile.php">Profile</a></li>
                     <li class="nav-item"><a class="nav-link" href="public/transfer.php">Transfer Money</a></li>
                     <li class="nav-item"><a class="nav-link" href="public/history.php">Transaction History</a></li>
+                    <li class="nav-item"><a class="nav-link" href="public/serach.php">Search</a></li>
                     <li class="nav-item"><a class="nav-link text-danger" href="public/logout.php">Logout</a></li>
                 <?php else: ?>
                     <li class="nav-item"><a class="nav-link" href="public/login.php">Login</a></li>
