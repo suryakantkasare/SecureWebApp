@@ -1,12 +1,18 @@
 <?php
 require_once '../config/config.php';
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
 $user_id = $_SESSION['user_id'];
+$errors = [];
+$success = "";
 
 // Fetch user details securely using PDO
 $stmt = $db->prepare("SELECT username, email, balance, biography, profile_image FROM users WHERE id = :id");
@@ -14,10 +20,9 @@ $stmt->bindValue(':id', $user_id, PDO::PARAM_INT);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Handle Profile Update
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile'])) {
     $biography = htmlspecialchars(trim($_POST['biography']));
-    $profile_image = $user['profile_image']; // Keep old image if no new one is uploaded
+    $profile_image = $user['profile_image']; // Retain old image if none is uploaded
 
     // Profile Image Upload Handling
     if (!empty($_FILES['profile_image']['name'])) {
@@ -26,32 +31,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile'])) {
         $file_tmp = $_FILES["profile_image"]["tmp_name"];
         $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
         $allowed_exts = ['jpg', 'jpeg', 'png', 'gif'];
+        $mime_types = ['image/jpeg', 'image/png', 'image/gif'];
 
-        if (in_array($file_ext, $allowed_exts)) {
+        // Check file extension and MIME type
+        $file_mime = mime_content_type($file_tmp);
+        if (!in_array($file_ext, $allowed_exts) || !in_array($file_mime, $mime_types)) {
+            $errors[] = "Invalid file format. Only JPG, JPEG, PNG, and GIF are allowed.";
+        } else {
+            // Generate a unique filename
             $new_file_name = "profile_" . $user_id . "_" . time() . "." . $file_ext;
-            $target_file = $target_dir . $new_file_name;
-            
+            $target_file = realpath($target_dir) . "/" . $new_file_name; // Prevent directory traversal
+
             if (move_uploaded_file($file_tmp, $target_file)) {
                 $profile_image = $new_file_name;
             } else {
-                $error = "Error uploading file.";
+                $errors[] = "Error uploading file.";
             }
-        } else {
-            $error = "Invalid file format. Only JPG, JPEG, PNG, and GIF are allowed.";
         }
     }
 
-    // Update user details in the database
-    $stmt = $db->prepare("UPDATE users SET biography = :biography, profile_image = :profile_image WHERE id = :id");
-    $stmt->bindValue(':biography', $biography, PDO::PARAM_STR);
-    $stmt->bindValue(':profile_image', $profile_image, PDO::PARAM_STR);
-    $stmt->bindValue(':id', $user_id, PDO::PARAM_INT);
+    // Update user details in the database if no errors
+    if (empty($errors)) {
+        $stmt = $db->prepare("UPDATE users SET biography = :biography, profile_image = :profile_image WHERE id = :id");
+        $stmt->bindValue(':biography', $biography, PDO::PARAM_STR);
+        $stmt->bindValue(':profile_image', $profile_image, PDO::PARAM_STR);
+        $stmt->bindValue(':id', $user_id, PDO::PARAM_INT);
 
-    if ($stmt->execute()) {
-        $success = "Profile updated successfully!";
-        header("Refresh: 1; url=profile.php"); // Refresh page after update
-    } else {
-        $error = "Database error: Could not update profile.";
+        if ($stmt->execute()) {
+            $success = "Profile updated successfully!";
+            header("Refresh: 1; url=profile.php");
+            exit();
+        } else {
+            $errors[] = "Database error: Could not update profile.";
+        }
     }
 }
 ?>
@@ -62,11 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile | Secure Web App</title>
-
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-light">
@@ -81,8 +89,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile'])) {
                         <h3>Profile</h3>
                     </div>
                     <div class="card-body">
-                        <?php if (isset($success)) echo "<div class='alert alert-success'>$success</div>"; ?>
-                        <?php if (isset($error)) echo "<div class='alert alert-danger'>$error</div>"; ?>
+                        <?php if (!empty($success)) echo "<div class='alert alert-success'>$success</div>"; ?>
+                        <?php if (!empty($errors)) {
+                            echo "<div class='alert alert-danger'><ul>";
+                            foreach ($errors as $error) {
+                                echo "<li>$error</li>";
+                            }
+                            echo "</ul></div>";
+                        } ?>
 
                         <form action="profile.php" method="post" enctype="multipart/form-data">
                             <div class="mb-3">
@@ -105,16 +119,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile'])) {
                                 <textarea class="form-control" name="biography" rows="3"><?= htmlspecialchars($user['biography'] ?? '') ?></textarea>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Profile Image</label>
-                                <div class="text-center">
-                                    <?php if (!empty($user['profile_image'])): ?>
-                                        <img src="../uploads/<?= htmlspecialchars($user['profile_image']) ?>" class="rounded-circle mb-3" width="150">
-                                    <?php else: ?>
-                                        <img src="../images/default-profile.png" class="rounded-circle mb-3" width="150">
-                                    <?php endif; ?>
-                                </div>
-                                <input type="file" class="form-control" name="profile_image" accept="image/*">
+                            <div class="mb-3 text-center">
+                                <label class="form-label">Profile Image</label><br>
+                                <?php if (!empty($user['profile_image'])): ?>
+                                    <img src="../uploads/<?= htmlspecialchars($user['profile_image']) ?>" class="rounded-circle mb-3" width="150">
+                                <?php else: ?>
+                                    <img src="../images/default-profile.png" class="rounded-circle mb-3" width="150">
+                                <?php endif; ?>
+                                <input type="file" class="form-control mt-2" name="profile_image" accept="image/*">
                             </div>
 
                             <div class="d-grid">
@@ -129,8 +141,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile'])) {
 
     <?php include '../includes/footer.php'; ?>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>
