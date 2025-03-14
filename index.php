@@ -1,71 +1,50 @@
 <?php
-require_once "config/config.php";
+require_once 'config/config.php';
 
-// Check if the user is logged in
-$loggedIn = isset($_SESSION['user_id']);
+$controllerName = isset($_GET['controller']) ? $_GET['controller'] : 'auth';
+$action = isset($_GET['action']) ? $_GET['action'] : 'login';
 
-if ($loggedIn) {
-    // Fetch user details
-    $user_id = $_SESSION['user_id'];
-    $query = $db->prepare("SELECT username, balance FROM users WHERE id = ?");
-    $query->execute([$user_id]);
-    $user = $query->fetch(PDO::FETCH_ASSOC);
-    
-    require_once "includes/log_activity.php";
-
-    logActivity("index Page");
+switch ($controllerName) {
+    case 'auth':
+        require_once 'controller/AuthController.php';
+        $auth = new AuthController($db);
+        if ($action == 'login') {
+            $auth->login();
+        } elseif ($action == 'register') {
+            $auth->register();
+        } elseif ($action == 'logout') {
+            $auth->logout();
+        }
+        break;
+    case 'transfer':
+        require_once 'controller/TransferController.php';
+        $transfer = new TransferController($db);
+        $transfer->index();
+        break;
+    case 'profile':
+        require_once 'controller/ProfileController.php';
+        $profile = new ProfileController($db);
+        if ($action == 'update') {
+            $profile->update();
+        } elseif ($action == 'view') {
+            $profile->view();
+        } elseif ($action == 'list') {
+            $profile->list();
+        } else {
+            $profile->index();
+        }
+        break;
+    case 'search':
+        require_once 'controller/SearchController.php';
+        $search = new SearchController($db);
+        $search->index();
+        break;
+    case 'transaction':
+        require_once 'controller/TransactionController.php';
+        $transaction = new TransactionController($db);
+        $transaction->index();
+        break;
+    default:
+        echo "Page not found.";
 }
-
-
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $loggedIn ? 'Dashboard' : 'Welcome'; ?> | Secure Web App</title>
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body class="bg-light">
-
-    <?php include 'includes/header.php'; ?>
-
-    <div class="container mt-5">
-        <?php if ($loggedIn): ?>
-            <!-- Dashboard View for Logged-in Users -->
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <h2 class="card-title">Welcome, <?php echo htmlspecialchars($user['username']); ?>!</h2>
-                    <p class="card-text">Your Balance: <strong>Rs. <?php echo number_format($user['balance'], 2); ?></strong></p>
-                    
-                    <div class="d-grid gap-2 col-6 mx-auto mt-3">
-                        <a href="public/profile.php" class="btn btn-primary">View Profile</a>
-                        <a href="public/transfer.php" class="btn btn-success">Transfer Money</a>
-                        <a href="public/transactions.php" class="btn btn-warning">Transaction History</a>
-                        <a href="public/logout.php" class="btn btn-danger">Logout</a>
-                    </div>
-                </div>
-            </div>
-        <?php else: ?>
-            <!-- Welcome Page for Non-Logged-in Users -->
-            <div class="text-center">
-                <h1>Welcome to Secure Web App</h1>
-                <p class="lead">Manage your finances securely and easily.</p>
-                <div class="d-grid gap-2 col-6 mx-auto mt-3">
-                    <a href="public/login.php" class="btn btn-primary">Login</a>
-                    <a href="public/register.php" class="btn btn-success">Register</a>
-                </div>
-            </div>
-        <?php endif; ?>
-    </div>
-
-    <?php include 'includes/footer.php'; ?>
-
-</body>
-</html>

@@ -1,0 +1,76 @@
+/* assets/css/custom.css */
+
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f7f9fc;
+    color: #333;
+    margin-bottom: 100px; /* ensure footer is visible */
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: #2c3e50;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.navbar-brand, .navbar-nav .nav-link {
+    color: #ecf0f1 !important;
+    font-weight: 500;
+}
+.navbar-nav .nav-link:hover {
+    color: #ffffff !important;
+}
+
+/* Card styling for forms and panels */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+}
+
+/* Form inputs */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #2980b9;
+    border: none;
+    border-radius: 5px;
+}
+.btn-primary:hover {
+    background-color: #1f6391;
+}
+.btn-outline-primary {
+    border-color: #2980b9;
+    color: #2980b9;
+}
+.btn-outline-primary:hover {
+    background-color: #2980b9;
+    color: #fff;
+}
+
+/* Containers */
+.container {
+    margin-top: 30px;
+}
+
+/* Footer */
+.footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 1rem 0;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Utility classes */
+.text-center { text-align: center; }
+.shadow-sm { box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important; }
