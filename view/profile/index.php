@@ -60,6 +60,7 @@ if (!isset($user)) {
     <?php endif; ?>
     
     <form method="post" action="<?= BASE_URL ?>index.php?controller=profile&action=update" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
       <div class="mb-3">
         <label class="form-label">Username</label>
         <input type="text" class="form-control" value="<?= htmlspecialchars($user['username']) ?>" disabled>

@@ -28,24 +28,30 @@ class ProfileController {
             header("Location: " . BASE_URL . "index.php?controller=auth&action=login");
             exit();
         }
+    
         $user_id = $_SESSION['user_id'];
         $errors = [];
         $success = "";
-        
+    
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            // ✅ CSRF Token Validation
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die("CSRF attack detected!");
+            }
+    
             $email = trim($_POST['email']);
             $biography = trim($_POST['biography']);
-            
+    
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors[] = "Invalid email format.";
             }
-            
-            // Handle profile image upload if provided
+    
+            // ✅ Secure Profile Image Upload Handling
             $profile_image = null;
             if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === 0) {
                 $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
                 $file_ext = strtolower(pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION));
-                
+    
                 if (!in_array($file_ext, $allowed_extensions)) {
                     $errors[] = "Invalid image format. Allowed types: jpg, jpeg, png, gif.";
                 } else {
@@ -69,16 +75,20 @@ class ProfileController {
                     }
                 }
             }
-            
+    
             if (empty($errors)) {
                 $this->userModel->updateProfile($user_id, $email, $biography, $profile_image);
                 $success = "Profile updated successfully.";
+    
+                // ✅ Regenerate CSRF token after a successful update
+                $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
             }
         }
-        
+    
         $user = $this->userModel->getUserById($user_id);
         include __DIR__ . '/../view/profile/index.php';
     }
+    
     
     // View a single user's profile (read‑only) via GET parameter "id"
     public function view() {
