@@ -33,17 +33,35 @@ $success = "";
 
 // Profile Update Logic
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile']) && $is_own_profile) {
+    // CSRF token validation
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $errors[] = "CSRF token validation failed.";
+    }
+
     $biography = htmlspecialchars(trim($_POST['biography']));
     $profile_image = $user['profile_image'];
 
+    // File upload validation
     if (!empty($_FILES['profile_image']['name'])) {
         $target_dir = "../uploads/";
         $file_name = basename($_FILES["profile_image"]["name"]);
         $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
         $allowed_exts = ['jpg', 'jpeg', 'png', 'gif'];
-        $mime_types = ['image/jpeg', 'image/png', 'image/gif'];
+        $allowed_mime_types = ['image/jpeg', 'image/png', 'image/gif'];
         
-        if (in_array($file_ext, $allowed_exts)) {
+        // Check file extension
+        if (!in_array($file_ext, $allowed_exts)) {
+            $errors[] = "Invalid file format.";
+        }
+        
+        // Validate file MIME type using the Fileinfo extension
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime_type = $finfo->file($_FILES["profile_image"]["tmp_name"]);
+        if (!in_array($mime_type, $allowed_mime_types)) {
+            $errors[] = "Invalid file type.";
+        }
+        
+        if (empty($errors)) {
             $new_file_name = "profile_" . $user_id . "_" . time() . "." . $file_ext;
             $target_file = $target_dir . $new_file_name;
 
@@ -52,8 +70,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile']) && $
             } else {
                 $errors[] = "Error uploading file.";
             }
-        } else {
-            $errors[] = "Invalid file format.";
         }
     }
 
@@ -104,10 +120,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile']) && $
 
                     <?php if ($is_own_profile): ?>
                         <form action="profile.php?id=<?= $user_id ?>" method="post" enctype="multipart/form-data">
+                            <!-- CSRF token field -->
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                             <textarea class="form-control my-2" name="biography" placeholder="Update your bio..."><?= htmlspecialchars($user['biography'] ?? '') ?></textarea>
                             <input type="file" name="profile_image" class="form-control my-2">
                             <button type="submit" name="update_profile" class="btn btn-success">Update Profile</button>
                         </form>
+                    <?php endif; ?>
+
+                    <?php if (!empty($errors)): ?>
+                        <div class="alert alert-danger mt-2">
+                            <?php foreach ($errors as $error): ?>
+                                <p><?= htmlspecialchars($error) ?></p>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($success): ?>
+                        <div class="alert alert-success mt-2">
+                            <p><?= htmlspecialchars($success) ?></p>
+                        </div>
                     <?php endif; ?>
                 </div>
             </div>

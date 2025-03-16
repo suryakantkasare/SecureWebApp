@@ -27,6 +27,7 @@
           <div class="alert alert-success"><?= htmlspecialchars($success); ?></div>
         <?php endif; ?>
         <form method="post">
+          <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8'); ?>">
           <div class="mb-3 position-relative">
             <label for="receiver_username" class="form-label">Receiver Username</label>
             <input type="text" class="form-control" name="receiver_username" id="receiver_username" required autocomplete="off">

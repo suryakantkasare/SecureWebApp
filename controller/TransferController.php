@@ -20,11 +20,16 @@ class TransferController {
             exit();
         }
         
-        logActivity("transfer Page");
-
+        logActivity("Transfer Page");
+    
         $user_id = $_SESSION['user_id'];
         $errors = [];
         $success = "";
+        
+        // Ensure CSRF token is set
+        if (!isset($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
         
         // Fetch user balance and username (initially)
         $stmt = $this->db->prepare("SELECT balance, username FROM users WHERE id = ?");
@@ -32,15 +37,28 @@ class TransferController {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $receiver_username = trim($_POST['receiver_username']);
-            $amount = floatval($_POST['amount']);
-            $comment = htmlspecialchars(trim($_POST['comment']));
+            // CSRF Token Validation
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                $errors[] = "Invalid CSRF token.";
+            }
             
+            $receiver_username = trim($_POST['receiver_username']);
+            // Validate receiver username (only letters, numbers, underscores; length 3-20)
+            if (!preg_match('/^[a-zA-Z0-9_]{3,20}$/', $receiver_username)) {
+                $errors[] = "Invalid receiver username format.";
+            }
+            
+            $amount = floatval($_POST['amount']);
             if ($amount <= 0) {
                 $errors[] = "Invalid amount.";
             } elseif ($amount > $user['balance']) {
                 $errors[] = "Insufficient balance.";
-            } else {
+            }
+            
+            // Sanitize comment: remove HTML tags
+            $comment = isset($_POST['comment']) ? strip_tags(trim($_POST['comment'])) : "";
+            
+            if (empty($errors)) {
                 // Get receiver ID from username
                 $stmt = $this->db->prepare("SELECT id FROM users WHERE username = ?");
                 $stmt->execute([$receiver_username]);
@@ -58,11 +76,11 @@ class TransferController {
                         // Deduct from sender
                         $stmt = $this->db->prepare("UPDATE users SET balance = balance - ? WHERE id = ?");
                         $stmt->execute([$amount, $user_id]);
-
+    
                         // Credit receiver
                         $stmt = $this->db->prepare("UPDATE users SET balance = balance + ? WHERE id = ?");
                         $stmt->execute([$amount, $receiver_id]);
-
+    
                         // Record the transaction
                         $result = $this->transactionModel->createTransaction($user_id, $receiver_id, $amount, $comment);
                         if (!$result) {
@@ -79,6 +97,9 @@ class TransferController {
                         $stmt->execute([$user_id]);
                         $user = $stmt->fetch(PDO::FETCH_ASSOC);
                         $_SESSION['updated_balance'] = $user['balance'];
+                        
+                        // Regenerate CSRF token after a successful transaction to prevent reuse
+                        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
                         
                         // Redirect to prevent form resubmission
                         header("Location: " . BASE_URL . "index.php?controller=transfer&action=index");
@@ -113,4 +134,5 @@ class TransferController {
         
         include __DIR__ . '/../view/transfer/index.php';
     }
+    
 }

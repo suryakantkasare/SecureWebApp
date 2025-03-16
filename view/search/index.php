@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Search Users | Secure Web App</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://cdn.jsdelivr.net; script-src 'self' https://code.jquery.com https://cdn.jsdelivr.net;">
   <link href="<?= BASE_URL; ?>assets/css/custom.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -15,6 +16,7 @@
     <div class="text-center mb-4">
       <h2>🔍 Search Users</h2>
       <form method="POST" class="d-flex justify-content-center">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8'); ?>">
         <input type="text" name="search_query" class="form-control w-50 me-2" placeholder="Enter username or email..." required>
         <button type="submit" class="btn btn-primary">Search</button>
       </form>
