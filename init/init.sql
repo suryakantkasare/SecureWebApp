@@ -1,6 +1,9 @@
+-- Create Database (if not exists) and use it
+CREATE DATABASE IF NOT EXISTS securewebapp;
+USE securewebapp;
 
 -- Users Table
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -12,7 +15,7 @@ CREATE TABLE users (
 );
 
 -- Transactions Table
-CREATE TABLE transactions (
+CREATE TABLE IF NOT EXISTS transactions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     sender_id INT NOT NULL,
     receiver_id INT NOT NULL,
@@ -24,7 +27,7 @@ CREATE TABLE transactions (
 );
 
 -- Activity Log Table
-CREATE TABLE activity_log (
+CREATE TABLE IF NOT EXISTS activity_log (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     page_accessed VARCHAR(255) NOT NULL,
@@ -32,3 +35,106 @@ CREATE TABLE activity_log (
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+-- Insertion of Sample Users with bcrypt-hashed password for 'Password123'
+INSERT INTO users (username, email, password) VALUES
+('trudy1', 'trudy1@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy2', 'trudy2@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy3', 'trudy3@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy4', 'trudy4@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy5', 'trudy5@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy6', 'trudy6@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy7', 'trudy7@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy8', 'trudy8@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy9', 'trudy9@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy10', 'trudy10@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy11', 'trudy11@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy12', 'trudy12@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy13', 'trudy13@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy14', 'trudy14@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy15', 'trudy15@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy16', 'trudy16@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy17', 'trudy17@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy18', 'trudy18@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy19', 'trudy19@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy20', 'trudy20@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy21', 'trudy21@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy22', 'trudy22@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy23', 'trudy23@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy24', 'trudy24@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy25', 'trudy25@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy26', 'trudy26@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy27', 'trudy27@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy28', 'trudy28@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy29', 'trudy29@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy30', 'trudy30@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy31', 'trudy31@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy32', 'trudy32@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy33', 'trudy33@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy34', 'trudy34@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy35', 'trudy35@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy36', 'trudy36@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy37', 'trudy37@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy38', 'trudy38@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy39', 'trudy39@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy40', 'trudy40@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy41', 'trudy41@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy42', 'trudy42@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy43', 'trudy43@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy44', 'trudy44@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy45', 'trudy45@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy46', 'trudy46@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy47', 'trudy47@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy48', 'trudy48@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy49', 'trudy49@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy50', 'trudy50@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy51', 'trudy51@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy52', 'trudy52@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy53', 'trudy53@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy54', 'trudy54@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy55', 'trudy55@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy56', 'trudy56@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy57', 'trudy57@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy58', 'trudy58@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy59', 'trudy59@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy60', 'trudy60@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy61', 'trudy61@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy62', 'trudy62@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy63', 'trudy63@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy64', 'trudy64@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy65', 'trudy65@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy66', 'trudy66@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy67', 'trudy67@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy68', 'trudy68@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy69', 'trudy69@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy70', 'trudy70@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy71', 'trudy71@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy72', 'trudy72@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy73', 'trudy73@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy74', 'trudy74@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy75', 'trudy75@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy76', 'trudy76@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy77', 'trudy77@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy78', 'trudy78@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy79', 'trudy79@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy80', 'trudy80@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy81', 'trudy81@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy82', 'trudy82@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy83', 'trudy83@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy84', 'trudy84@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy85', 'trudy85@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy86', 'trudy86@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy87', 'trudy87@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy88', 'trudy88@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy89', 'trudy89@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy90', 'trudy90@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy91', 'trudy91@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy92', 'trudy92@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy93', 'trudy93@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy94', 'trudy94@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy95', 'trudy95@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy96', 'trudy96@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy97', 'trudy97@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy98', 'trudy98@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy99', 'trudy99@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u'),
+('trudy100', 'trudy100@example.com', '$2y$12$IZxNXCnflVKiIqa.tbmJZOD4Vt6/Hk5I6qLIAtC4IDcSYvWZKLr9u');

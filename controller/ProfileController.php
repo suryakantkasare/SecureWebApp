@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../models/User.php';
-
+require_once __DIR__ . '/../includes/log_activity.php';
 class ProfileController {
     private $db;
     private $userModel;
@@ -20,6 +20,7 @@ class ProfileController {
         $user_id = $_SESSION['user_id'];
         $user = $this->userModel->getUserById($user_id);
         include __DIR__ . '/../view/profile/index.php';
+        logActivity("profile page");
     }
     
     // Process profile update (email, biography, profile image)
