@@ -60,8 +60,7 @@ if (!isset($user)) {
             <?php if (!empty($user['profile_image'])): ?>
                 <img src="<?= htmlspecialchars(UPLOAD_URL . $user['profile_image']) ?>" alt="Profile Image" class="profile-img">
             <?php else: ?>
-                <img src="<?= BASE_URL ?>uploads/default-profile.png" alt="Default Profile" class="profile-img">
-            <?php endif; ?>
+              <img src="<?= BASE_URL ?>uploads/default-profile.png" alt="Default Profile" class="profile-img">            <?php endif; ?>
     
             <div class="profile-header">
                 <h2><?= htmlspecialchars($user['username']) ?></h2>
@@ -82,3 +81,4 @@ if (!isset($user)) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
