@@ -45,7 +45,7 @@ class AuthController {
                 
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Regenerate CSRF token
-                header("Location: " . BASE_URL . "index.php?controller=transfer&action=index");
+                header("Location: " . BASE_URL . "");
                 exit();
             } else {
                 $errors[] = "Invalid username or password.";

@@ -15,7 +15,7 @@ if (!isset($_SESSION['initialized'])) {
 }
 
 // define('BASE_URL', 'http://localhost:8080/SecureWebApp/');
-define('BASE_URL', 'http://localhost:8080/');
+define('BASE_URL', 'https://localhost:443/');
 
 define('UPLOAD_DIR', __DIR__ . '/../uploads/');
 define('UPLOAD_URL', BASE_URL . 'uploads/');
