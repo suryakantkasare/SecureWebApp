@@ -1,8 +1,8 @@
 <?php
 require_once 'config/config.php';
 
-$controllerName = isset($_GET['controller']) ? $_GET['controller'] : 'auth';
-$action = isset($_GET['action']) ? $_GET['action'] : 'login';
+$controllerName = isset($_GET['controller']) ? $_GET['controller'] : 'home';
+$action = isset($_GET['action']) ? $_GET['action'] : 'index';
 
 switch ($controllerName) {
     case 'auth':
@@ -45,6 +45,10 @@ switch ($controllerName) {
         $transaction->index();
         break;
     default:
-        echo "Page not found.";
+        require_once 'controller/HomeController.php';
+        $home = new HomeController($db);
+        $home->index();
+        break;
+
 }
 ?>

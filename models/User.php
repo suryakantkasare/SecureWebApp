@@ -12,8 +12,7 @@ class User {
         $stmt->execute([$username, $email]);
         return $stmt->fetch() ? true : false;
     }
-
-    
+     
     // Register a new user (crediting Rs.100 on signup)
     public function register($username, $email, $password) {
         $password = trim($password);
@@ -24,7 +23,7 @@ class User {
             $hashed_password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
     
             $stmt = $this->db->prepare("INSERT INTO users (username, email, password, balance) VALUES (?, ?, ?, 100.00)");
-            $stmt->execute([$username, $email, $password]);
+            $stmt->execute([$username, $email, $hashed_password]); // Fixed: Use hashed password
     
             return true;
         } catch (PDOException $e) {
@@ -35,7 +34,6 @@ class User {
             }
         }
     }
-    
 
     // Log in a user; return user data on success
     public function login($username, $password) {
@@ -45,7 +43,6 @@ class User {
         $stmt->execute([$username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        
         if ($user && password_verify($password, $user['password'])) {
             return $user;
         }
@@ -65,12 +62,13 @@ class User {
             // Sanitize output
             $user['username'] = htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8');
             $user['email'] = htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8');
-            $user['biography'] = htmlspecialchars($user['biography'], ENT_QUOTES, 'UTF-8');
+            $user['biography'] = $user['biography'] 
+                ? htmlspecialchars($user['biography'], ENT_QUOTES, 'UTF-8') 
+                : "Hello, I am " . $user['username'];
         }
         
         return $user;
     }
-    
     
     // Get all users (if needed for search results)
     public function getAllUsers() {
@@ -80,13 +78,14 @@ class User {
         foreach ($users as &$user) {
             $user['username'] = htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8');
             $user['email'] = htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8');
-            $user['biography'] = htmlspecialchars($user['biography'], ENT_QUOTES, 'UTF-8');
+            $user['biography'] = $user['biography'] 
+                ? htmlspecialchars($user['biography'], ENT_QUOTES, 'UTF-8') 
+                : "Hello, I am " . $user['username'];
         }
     
         return $users;
     }
-    
-    
+
     // Update profile details (email, biography, and optionally profile image)
     public function updateProfile($id, $email, $biography, $profile_image = null) {
         $email = filter_var($email, FILTER_SANITIZE_EMAIL);
@@ -105,6 +104,6 @@ class User {
             $stmt = $this->db->prepare("UPDATE users SET email = ?, biography = ? WHERE id = ?");
             return $stmt->execute([$email, $biography, $id]);
         }
-    }    
+    }
 }
 ?>

@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- Content Security Policy: Adjust the allowed sources as needed -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://cdn.jsdelivr.net; script-src 'self' https://code.jquery.com https://cdn.jsdelivr.net;">
   <title>Transaction History | Secure Web App</title>
   <link href="<?= BASE_URL; ?>assets/css/custom.css" rel="stylesheet">
@@ -37,7 +36,13 @@
               <td><?= htmlspecialchars($tx['sender_name'], ENT_QUOTES, 'UTF-8'); ?></td>
               <td><?= htmlspecialchars($tx['receiver_name'], ENT_QUOTES, 'UTF-8'); ?></td>
               <td><?= number_format($tx['amount'], 2); ?></td>
-              <td><?= htmlspecialchars($tx['comment'], ENT_QUOTES, 'UTF-8'); ?></td>
+              <td>
+                <?php if ($tx['sender_id'] == $user_id): ?>
+                  <?= htmlspecialchars($tx['comment'], ENT_QUOTES, 'UTF-8'); ?>
+                <?php else: ?>
+                  -
+                <?php endif; ?>
+              </td>
               <td><?= htmlspecialchars($tx['transaction_time'], ENT_QUOTES, 'UTF-8'); ?></td>
             </tr>
           <?php endforeach; ?>

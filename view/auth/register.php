@@ -11,6 +11,8 @@
   </style>
 </head>
 <body>
+<?php include __DIR__ . '/../includes/header.php'; ?>
+
   <div class="container register-container">
     <div class="card p-4">
       <h2 class="text-center mb-4">Register</h2>
@@ -52,5 +54,7 @@
       </p>
     </div>
   </div>
+  <?php include __DIR__ . '/../includes/footer.php'; ?>
+
 </body>
 </html>
