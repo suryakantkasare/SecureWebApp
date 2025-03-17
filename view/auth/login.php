@@ -11,6 +11,8 @@
   </style>
 </head>
 <body>
+<?php include __DIR__ . '/../includes/header.php'; ?>
+
   <div class="container login-container">
     <div class="card p-4">
       <h2 class="text-center mb-4">Login</h2>

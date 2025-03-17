@@ -104,7 +104,9 @@ class AuthController {
     }
 
     public function logout() {
-        session_start(); // Ensure session is started
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        } // Ensure session is started
 
         // Destroy session securely
         $_SESSION = [];
