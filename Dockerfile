@@ -13,8 +13,9 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql
 # Copy application files to the container
 COPY . /var/www/html/
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
+# Copy the entrypoint script and give execute permissions
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Restart Apache when container starts
-CMD ["apache2-foreground"]
+# Set the entrypoint script
+ENTRYPOINT ["/entrypoint.sh"]
