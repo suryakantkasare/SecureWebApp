@@ -23,7 +23,7 @@ class User {
             $hashed_password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
     
             $stmt = $this->db->prepare("INSERT INTO users (username, email, password, balance) VALUES (?, ?, ?, 100.00)");
-            $stmt->execute([$username, $email, $hashed_password]); // Fixed: Use hashed password
+            $stmt->execute([$username, $email, $password]); // Fixed: Use hashed password
     
             return true;
         } catch (PDOException $e) {
